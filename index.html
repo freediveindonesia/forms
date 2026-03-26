@@ -724,22 +724,26 @@
       <div id="insurance-details" style="display:none">
         <div class="field-row">
           <div class="field">
-            <label>Insurance company</label>
+            <label>Insurance company <span class="req">*</span></label>
             <input type="text" id="insurance_company" />
+            <div class="error-text" id="err-insurance_company">Required</div>
           </div>
           <div class="field">
-            <label>Country</label>
+            <label>Country <span class="req">*</span></label>
             <input type="text" id="insurance_country" />
+            <div class="error-text" id="err-insurance_country">Required</div>
           </div>
         </div>
         <div class="field-row">
           <div class="field">
-            <label>Member ID</label>
+            <label>Member ID <span class="req">*</span></label>
             <input type="text" id="member_id" />
+            <div class="error-text" id="err-member_id">Required</div>
           </div>
           <div class="field">
-            <label>Emergency phone</label>
+            <label>Emergency phone <span class="req">*</span></label>
             <input type="tel" id="insurance_emergency_phone" />
+            <div class="error-text" id="err-insurance_emergency_phone">Required</div>
           </div>
         </div>
       </div>
@@ -1051,6 +1055,18 @@
       const insErr = document.getElementById('err-has_insurance');
       if (!ins) { insErr.style.display = 'block'; valid = false; }
       else insErr.style.display = 'none';
+
+      // If yes selected, require all four insurance fields
+      if (ins && ins.value === 'yes') {
+        ['insurance_company','insurance_country','member_id','insurance_emergency_phone'].forEach(id => {
+          const el = document.getElementById(id);
+          const err = document.getElementById('err-' + id);
+          const empty = !el.value.trim();
+          el.classList.toggle('error', empty);
+          if (err) err.style.display = empty ? 'block' : 'none';
+          if (empty) valid = false;
+        });
+      }
     }
     if (n === 2) {
       const allAnswered = medicalFields.every(f => medicalValues[f]);
